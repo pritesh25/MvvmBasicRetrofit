@@ -1,4 +1,4 @@
-package com.mindorks.framework.mvvm
+package com.mindorks.framework
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.mindorks.framework.mvvm.R
 import java.util.*
 
 class BookAdapter : RecyclerView.Adapter<BookAdapter.BookSearchResultHolder>() {

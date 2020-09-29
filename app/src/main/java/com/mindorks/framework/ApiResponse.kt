@@ -1,4 +1,4 @@
-package com.mindorks.framework.mvvm
+package com.mindorks.framework
 
 class ApiResponse {
     var posts: StackModel?

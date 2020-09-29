@@ -1,4 +1,4 @@
-package com.mindorks.framework.mvvm
+package com.mindorks.framework
 
 import retrofit2.Call
 import retrofit2.http.GET

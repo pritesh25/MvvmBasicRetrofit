@@ -1,4 +1,4 @@
-package com.mindorks.framework.mvvm
+package com.mindorks.framework
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

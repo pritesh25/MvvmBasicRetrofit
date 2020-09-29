@@ -1,4 +1,4 @@
-package com.mindorks.framework.mvvm
+package com.mindorks.framework
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +9,6 @@ import retrofit2.Response
 class BookRepository {
     private val baseUrl = "https://api.stackexchange.com/2.2/"
     private val bookService: BookService
-    private val volumesResponseLiveData = MutableLiveData<StackModel?>()
     private val apiResponse = MutableLiveData<ApiResponse>()
 
     fun searchVolumes(keyword: String?) {
@@ -19,7 +18,6 @@ class BookRepository {
                 response: Response<StackModel?>
             ) {
                 if (response.body() != null) {
-                    //setVolumesResponseLiveData(response.body()!!)
                     apiResponse.postValue(ApiResponse(response.body()))
                 }
             }
@@ -30,16 +28,8 @@ class BookRepository {
         })
     }
 
-    fun getVolumesResponseLiveData(): LiveData<StackModel?> {
-        return volumesResponseLiveData
-    }
-
     fun getApiResponse(): LiveData<ApiResponse?> {
         return apiResponse
-    }
-
-    fun setVolumesResponseLiveData(stackModel: StackModel?) {
-        volumesResponseLiveData.postValue(stackModel)
     }
 
     init {
