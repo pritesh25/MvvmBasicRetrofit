@@ -1,16 +1,31 @@
 package com.mindorks.framework
 
-class ApiResponse {
-    var posts: StackModel?
-    var error: Throwable?
+import okhttp3.ResponseBody
 
-    constructor(posts: StackModel?) {
-        this.posts = posts
-        error = null
+class ApiResponse {
+    var model: StackModel?
+    var throwable: Throwable?
+    var responseBody: ResponseBody?
+    var statusCode: Int?
+
+    constructor(model: StackModel?, status: Int?) {
+        this.model = model
+        this.statusCode = status
+        this.throwable = null
+        this.responseBody = null
+    }
+
+    constructor(responseBody: ResponseBody?, status: Int?) {
+        this.responseBody = responseBody
+        this.statusCode = status
+        this.model = null
+        this.throwable = null
     }
 
     constructor(error: Throwable?) {
-        this.error = error
-        posts = null
+        this.throwable = error
+        this.model = null
+        this.statusCode = null
+        this.responseBody = null
     }
 }

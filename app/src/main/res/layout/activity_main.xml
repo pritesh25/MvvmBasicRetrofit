@@ -9,8 +9,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_booksearch_searchResultsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLoadData"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -20,5 +24,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonLoadData"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/load_data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_booksearch_searchResultsRecyclerView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

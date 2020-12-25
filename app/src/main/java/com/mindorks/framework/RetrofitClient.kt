@@ -6,7 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    fun getClient(baseUrl : String): Retrofit {
+    fun getClient(): Retrofit {
+        val baseUrl = "https://api.stackexchange.com/2.2/"
         val interceptor = HttpLoggingInterceptor()
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
         return Retrofit.Builder()

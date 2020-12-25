@@ -1,17 +1,19 @@
 package com.mindorks.framework
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import android.widget.Button
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mindorks.framework.mvvm.R
 import com.mindorks.framework.mvvm.databinding.ActivityMainBinding
+import org.json.JSONObject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private val mTag = "MainActivity"
-    private var viewModel: BookViewModel? = null
+    private val viewModel: BookViewModel by viewModels()
 
     private lateinit var b: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,36 +23,49 @@ class MainActivity : AppCompatActivity() {
 
         val bookAdapter = BookAdapter()
 
+        b.progressBar.visibility = View.GONE
         b.fragmentBooksearchSearchResultsRecyclerView.apply {
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = bookAdapter
         }
 
-        viewModel = ViewModelProvider(this).get(BookViewModel::class.java)
-        viewModel!!.init()
-        /*viewModel!!.getVolumesResponseLiveData()!!.observe(this, {
-            b.progressBar.visibility = View.GONE
-            adapter!!.setResults(it!!.items!! as List<StackModel.Item>)
-
-        })*/
-
-        viewModel!!.getApiResponse()!!.observe(this, { response ->
-
+        viewModel.init()
+        viewModel.getApiResponse()?.observe(this, { response ->
             response?.let { apiResponse ->
-                apiResponse.posts?.let {
+                apiResponse.statusCode?.let { status ->
+                    when (status) {
+                        200 -> {
+                            apiResponse.model?.let {
+                                b.progressBar.visibility = View.GONE
+                                bookAdapter.setResults(it.items!! as List<StackModel.Item>)
+                            }
+                        }
+                        else -> {
+                            apiResponse.responseBody?.let {
+                                toasty(this, "error = ${JSONObject(it.string())}")
+                            }
+                        }
+                    }
+                } ?: kotlin.run {
+                    //not connected to server
                     b.progressBar.visibility = View.GONE
-                    bookAdapter.setResults(it.items!! as List<StackModel.Item>)
-                }
-                apiResponse.error?.let {
-                    b.progressBar.visibility = View.GONE
-                    Toast.makeText(this, "error = ${it.message}", Toast.LENGTH_SHORT).show()
+                    toasty(this, "Something went wrong")
                 }
             }
-
         })
 
-        viewModel!!.searchVolumes("stackoverflow")
-
+        findViewById<Button>(R.id.buttonLoadData).setOnClickListener {
+            Log.d(mTag, "isInternet = $isInternet")
+            if (isInternet) {
+                b.progressBar.visibility = View.VISIBLE
+                viewModel.setApiRequest("stackoverflow")
+            } else {
+                b.progressBar.visibility = View.GONE
+                toasty(this, "No internet")
+            }
+        }
 
     }
+
+
 }

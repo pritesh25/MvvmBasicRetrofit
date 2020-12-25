@@ -7,18 +7,21 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class BookRepository {
-    private val baseUrl = "https://api.stackexchange.com/2.2/"
-    private val bookService: BookService
+    private val bookService = RetrofitClient.getClient().create(BookService::class.java)
     private val apiResponse = MutableLiveData<ApiResponse>()
 
-    fun searchVolumes(keyword: String?) {
-        bookService.searchVolumes(keyword)!!.enqueue(object : Callback<StackModel?> {
+    fun setApiRequest(keyword: String?) {
+        bookService.searchVolumes(keyword)?.enqueue(object : Callback<StackModel?> {
             override fun onResponse(
                 call: Call<StackModel?>,
                 response: Response<StackModel?>
             ) {
-                if (response.body() != null) {
-                    apiResponse.postValue(ApiResponse(response.body()))
+                response.body()?.let {
+                    apiResponse.postValue(ApiResponse(it, response.code()))
+                } ?: kotlin.run {
+                    response.errorBody()?.let {
+                        apiResponse.postValue(ApiResponse(it, response.code()))
+                    }
                 }
             }
 
@@ -30,9 +33,5 @@ class BookRepository {
 
     fun getApiResponse(): LiveData<ApiResponse?> {
         return apiResponse
-    }
-
-    init {
-        bookService = RetrofitClient.getClient(baseUrl).create(BookService::class.java)
     }
 }
